@@ -66,8 +66,8 @@
   var Text = function() {};
   
   Text.prototype = {
-    excerpt : function(str, length) {
-      length |= 200;
+    truncate : function(str, length) {
+      length = length || 200;
       str = str.replace(/<(?:.|\n)*?>/gm, '');
       if (str.length > length)
       return str.substring(0, length) + '...';
