@@ -1,0 +1,7 @@
+{
+  "name": "basbosa-helpers",
+  "version": "0.0.1",
+  "description": "A group of JS helpers that works on Node.js and browsers",
+  "main": "index.js"
+
+}
