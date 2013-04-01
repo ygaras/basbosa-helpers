@@ -48,7 +48,7 @@
     
     link : function(link, title, options) { 
       options = options || {};
-      if (options.full && link.indexOf('://') === -1) link = this.options.webRoot + link;
+      if (options.full && link.indexOf('://') === -1) link = this.options().webRoot + link;
       return '<a href="' + link +  '"' + this.htmlOptions(options) + ' >' + title + '</a>';
     },
     
