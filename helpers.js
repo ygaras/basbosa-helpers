@@ -13,7 +13,7 @@
   }
 }(this, function(root) {
 
-  var htmlInstance, textInstance;
+  var htmlInstance, textInstance, utilInstance;
 
   var Html = function() {
     // Try to load default config from Basbosa config
@@ -45,10 +45,31 @@
       }
       return res;
     },
-    
+
+    parseGetParams : function(getOptions) {
+      var optionsArr = [];
+
+      for (var k in getOptions) {
+        optionsArr.push(k + '=' + encodeURIComponent(getOptions[k]));
+      }
+
+      if (optionsArr.length) {
+        return '?' + optionsArr.join('&');
+      }
+      return '';
+    },
+
     link : function(link, title, options) { 
+      var getOptions = '';
       options = options || {};
+
+      // Handle if this is should be an absolute link
       if (options.full && link.indexOf('://') === -1) link = this.options().webRoot + link;
+
+      // Handle get parameters
+      if (options.get) {
+        link += this.parseGetParams(options.get);
+      }
       return '<a href="' + link +  '"' + this.htmlOptions(options) + ' >' + title + '</a>';
     },
     
@@ -92,11 +113,35 @@
   if (typeof Basbosa !== 'undefined') {
     Basbosa.add('TextHelper', textInstance);
   }
-  
+
+  var Util = function() {};
+
+  Util.prototype = {
+    extend : function(obj) {
+      Array.prototype.slice.call(arguments, 1).forEach(function(source) {
+        if (source) {
+          for (var prop in source) {
+            obj[prop] = source[prop];
+          }
+        }
+      });
+      return obj;
+    }
+  };
+
+  if (typeof utilInstance === 'undefined') utilInstance = new Util;
+  if (typeof Basbosa !== 'undefined') {
+    Basbosa.add('UtilHelper', utilInstance);
+  }
+
+
   return {
     Html : htmlInstance,
     HtmlClass : Html,
     Text : textInstance,
     TextClass : Text,
+    Util : utilInstance,
+    UtilClass : Util
+
   };
 }));
