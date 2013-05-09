@@ -13,7 +13,7 @@
   }
 }(this, function(root) {
 
-  var htmlInstance, textInstance, utilInstance;
+  var htmlInstance, textInstance, utilInstance, formInstance;
 
   var Html = function() {
     // Try to load default config from Basbosa config
@@ -134,6 +134,40 @@
     Basbosa.add('UtilHelper', utilInstance);
   }
 
+  var Form = function() {};
+
+  Form.prototype = {
+    currentModel : false,
+
+    setModel : function(modelName) {
+      this.currentModel = modelName;
+    },
+
+    input : function(fieldName, options) {
+      var currentModel = (fieldName.indexOf('.') > -1) ? fieldName.exlode('.')[0] : this.currentModel;
+      var inputId = B('_').classify(fieldName.replace('.', ''));
+
+      options = utilInstance.extend({
+        label : B('_').humanize(fieldName),
+        type : 'text',
+        name : 'data[' + this.currentModel + '][' + fieldName + ']',
+        id : inputId
+      }, options);
+
+
+
+      return '<div class="input">'
+        + '<label for="' + inputId + '">' + options.label + '</label>'
+        + '<input type="' + options.type + '" name="' + options.name +'" id="' + options.id + '"/>'
+        + '</div>';
+    }
+  };
+
+  if (typeof formInstance === 'undefined') formInstance = new Form;
+  if (typeof Basbosa !== 'undefined') {
+    Basbosa.add('FormHelper', formInstance);
+  }
+
 
   return {
     Html : htmlInstance,
@@ -141,7 +175,9 @@
     Text : textInstance,
     TextClass : Text,
     Util : utilInstance,
-    UtilClass : Util
+    UtilClass : Util,
+    Form : formInstance,
+    FormClass : Form
 
   };
 }));
